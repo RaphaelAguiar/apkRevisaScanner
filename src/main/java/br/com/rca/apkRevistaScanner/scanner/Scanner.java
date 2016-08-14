@@ -26,16 +26,19 @@ import br.com.rca.apkRevista.bancoDeDados.excessoes.ClienteNaoEncontrado;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.RevistaNaoEncontrada;
 
 
-public class Scanner implements Runnable{
-	private static Scanner instance;
+public class Scanner{
+	private static Scanner instance = Scanner.getInstance();
+	private boolean ativo           = false; 
 		
-	private Scanner() throws Exception{
+	private Scanner(){
 		File main               = new File(Parametros.PASTA_RAIZ);
 		if(!main.isDirectory()) 
-			throw new Exception("O endereço informado para pasta raiz não corresponde a uma pasta!");
+			throw new RuntimeException("O endereço informado para pasta raiz não corresponde a uma pasta!");
 	}
 		
 	public void run() {
+		ativo = true;
+		
 		boolean parar = false;
 		while(parar==false){
 			try{
@@ -111,11 +114,17 @@ public class Scanner implements Runnable{
 				parar = true;
 			}
 		}
+		
+		ativo = false;
 	}
 
-	public static Scanner getInstance() throws Exception {
+	public static Scanner getInstance(){
 		if(instance==null)
 			instance = new Scanner();
 		return instance;
+	}
+	
+	public boolean isActive(){
+		return ativo;
 	}
 }
