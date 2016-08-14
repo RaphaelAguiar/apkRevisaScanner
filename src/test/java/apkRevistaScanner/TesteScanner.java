@@ -1,4 +1,4 @@
-package apkRevista;
+package apkRevistaScanner;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import br.com.rca.apkRevista.bancoDeDados.beans.enums.Status;
 import br.com.rca.apkRevista.bancoDeDados.dao.DAOCliente;
 import br.com.rca.apkRevista.bancoDeDados.dao.DAORevista;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.RevistaNaoEncontrada;
-import br.com.rca.apkRevista.scanner.Scanner;
+import br.com.rca.apkRevistaScanner.scanner.Scanner;
 
 public class TesteScanner {
 	public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class TesteScanner {
 			Revista revistaTeste;
 			try{
 				String[] paramnsRevista = {"revistaTeste"};			
-				revistaTeste = clienteTeste.getRevistas("nome = ?", paramnsRevista).get(0);
+				revistaTeste = clienteTeste.getRevistas("nomeDaRevista = ?", paramnsRevista).get(0);
 			}catch(RevistaNaoEncontrada e){
 				revistaTeste = new Revista(clienteTeste, "revistaTeste");
 			}

@@ -1,4 +1,4 @@
-package br.com.rca.apkRevista.scanner;
+package br.com.rca.apkRevistaScanner.scanner;
 
 import java.awt.Image;
 import java.awt.image.RenderedImage;
@@ -14,6 +14,7 @@ import org.ghost4j.document.PDFDocument;
 import org.ghost4j.renderer.RendererException;
 import org.ghost4j.renderer.SimpleRenderer;
 
+import br.com.rca.apkRevista.Parametros;
 import br.com.rca.apkRevista.bancoDeDados.beans.Cliente;
 import br.com.rca.apkRevista.bancoDeDados.beans.Pagina;
 import br.com.rca.apkRevista.bancoDeDados.beans.Revista;
@@ -25,20 +26,15 @@ import br.com.rca.apkRevista.bancoDeDados.excessoes.ClienteNaoEncontrado;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.RevistaNaoEncontrada;
 
 
-public class Scanner extends Thread{
-	public static final String  PASTA_RAIZ         = "C:" + File.separator + "Temp";
-	public static final int     RESOLUCAO_PADRAO   = 300;
-	public static final String  FORMATO_PADRAO     = "png";
-	
+public class Scanner implements Runnable{
 	private static Scanner instance;
 		
 	private Scanner() throws Exception{
-		File main               = new File(PASTA_RAIZ);
+		File main               = new File(Parametros.PASTA_RAIZ);
 		if(!main.isDirectory()) 
 			throw new Exception("O endereço informado para pasta raiz não corresponde a uma pasta!");
 	}
 		
-	@Override
 	public void run() {
 		boolean parar = false;
 		while(parar==false){
@@ -59,11 +55,11 @@ public class Scanner extends Thread{
 								revista.setStatus(Status.EM_PROCESSAMENTO);
 								DAORevista.getInstance().persist(revista);
 
-								File arquivo              = new File(revista.getFolder());
+								File arquivo              = new File(revista.getFolder() + ".pdf");
 								PDFDocument pdf           = new PDFDocument();
 								SimpleRenderer renderer   = new SimpleRenderer();
 								pdf.load(arquivo);
-								renderer.setResolution(RESOLUCAO_PADRAO);
+								renderer.setResolution(Parametros.RESOLUCAO_PADRAO);
 								List<Image> imagens = renderer.render(pdf);
 								
 								//Este trecho do fonte parte do presuposto que toda revista deve ter pelo menos 1 pasta
@@ -76,7 +72,7 @@ public class Scanner extends Thread{
 								for (int i = 1; i <= revista.getNPaginas() ; i++) {
 									Pagina pagina = new Pagina(revista,i);
 									imagem        = imagens.get(i-1);
-									ImageIO.write((RenderedImage) imagem,FORMATO_PADRAO,new File(pagina.getFolder()));
+									ImageIO.write((RenderedImage) imagem,Parametros.FORMATO_PADRAO,new File(pagina.getFolder()));
 									DAOPagina.getInstance().persist(pagina);
 								}
 								

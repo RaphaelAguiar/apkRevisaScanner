@@ -12,7 +12,7 @@
 		<class>br.com.rca.apkRevista.bancoDeDados.beans.Cliente</class>
 		<class>br.com.rca.apkRevista.bancoDeDados.beans.Revista</class>
 		<class>br.com.rca.apkRevista.bancoDeDados.beans.Pagina</class>
-		<class>br.com.rca.apkRevista.bancoDeDados.beans.Log</class>
+		<class>br.com.rca.apkRevista.bancoDeDados.beans.Log</class>		
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/revistas" />
