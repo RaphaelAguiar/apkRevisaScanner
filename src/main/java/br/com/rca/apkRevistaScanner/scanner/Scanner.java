@@ -25,7 +25,6 @@ import br.com.rca.apkRevista.bancoDeDados.dao.DAORevista;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.ClienteNaoEncontrado;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.RevistaNaoEncontrada;
 
-
 public class Scanner{
 	private static Scanner instance = Scanner.getInstance();
 	private boolean ativo           = false; 

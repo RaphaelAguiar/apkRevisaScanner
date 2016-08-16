@@ -11,14 +11,13 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>br.com.rca.apkRevistaScanner.webService</param-value> 
         </init-param>
-        <init-param>
+      <init-param>
 		    <param-name>jersey.config.server.provider.classnames</param-name>
 		    <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
-		</init-param>
+		</init-param> 
 	</servlet>
     <servlet-mapping>
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/*</url-pattern>
-    </servlet-mapping>
-    
+    </servlet-mapping>    
 </web-app>

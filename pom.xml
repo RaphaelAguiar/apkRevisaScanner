@@ -4,7 +4,7 @@
 	<groupId>br.com.rca</groupId>
 	<artifactId>webRevistaScanner</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>webRevista</name>
+	<name>webRevistaScanner</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -15,7 +15,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>3.6.4.Final</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
