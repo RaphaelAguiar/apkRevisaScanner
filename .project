@@ -3,7 +3,6 @@
 	<name>apkRevista</name>
 	<comment></comment>
 	<projects>
-		<project>apkRevista</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

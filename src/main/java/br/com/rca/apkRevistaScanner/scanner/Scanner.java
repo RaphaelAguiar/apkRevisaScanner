@@ -126,4 +126,7 @@ public class Scanner{
 	public boolean isActive(){
 		return ativo;
 	}
+	public static void main(String[] args) {
+		new Scanner().run();
+	}
 }
