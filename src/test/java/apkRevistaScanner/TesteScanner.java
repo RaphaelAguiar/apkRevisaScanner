@@ -23,7 +23,6 @@ public class TesteScanner {
 			}else{
 				clienteTeste = list.get(0);
 			}
-			
 			Revista revistaTeste;
 			try{
 				String[] paramnsRevista = {"revistaTeste"};			

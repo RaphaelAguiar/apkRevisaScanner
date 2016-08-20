@@ -36,8 +36,7 @@ public class Scanner{
 	}
 		
 	public void run() {
-		ativo = true;
-		
+		ativo         = true;		
 		boolean parar = false;
 		while(parar==false){
 			try{
