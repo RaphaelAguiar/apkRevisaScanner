@@ -26,17 +26,15 @@ import br.com.rca.apkRevista.bancoDeDados.excessoes.ClienteNaoEncontrado;
 import br.com.rca.apkRevista.bancoDeDados.excessoes.RevistaNaoEncontrada;
 
 public class Scanner{
-	private static Scanner instance = Scanner.getInstance();
-	private boolean ativo           = false; 
+	private static Scanner instance = Scanner.getInstance(); 
 		
 	private Scanner(){
 		File main               = new File(Parametros.PASTA_RAIZ);
 		if(!main.isDirectory()) 
 			throw new RuntimeException("O endereço informado para pasta raiz não corresponde a uma pasta!");
 	}
-		
+	
 	public void run() {
-		ativo         = true;		
 		boolean parar = false;
 		while(parar==false){
 			try{
@@ -112,8 +110,6 @@ public class Scanner{
 				parar = true;
 			}
 		}
-		
-		ativo = false;
 	}
 
 	public static Scanner getInstance(){
@@ -122,10 +118,18 @@ public class Scanner{
 		return instance;
 	}
 	
-	public boolean isActive(){
-		return ativo;
-	}
 	public static void main(String[] args) {
-		new Scanner().run();
+		Scanner scanner = new Scanner();
+		while(true){
+			System.out.println("Iniciada varredura!");
+			scanner.run();
+			try {
+				System.out.println("Varredura completa!");
+				Thread.sleep(Parametros.INTERVALO_ENTRE_VARREDURAS_DO_SCANNER*1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
 	}
 }
