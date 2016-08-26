@@ -1,6 +1,8 @@
 package br.com.rca.apkRevistaScanner.scanner;
 
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +18,7 @@ import org.ghost4j.renderer.SimpleRenderer;
 
 import br.com.rca.apkRevista.Parametros;
 import br.com.rca.apkRevista.bancoDeDados.beans.Cliente;
+import br.com.rca.apkRevista.bancoDeDados.beans.Miniatura;
 import br.com.rca.apkRevista.bancoDeDados.beans.Pagina;
 import br.com.rca.apkRevista.bancoDeDados.beans.Revista;
 import br.com.rca.apkRevista.bancoDeDados.beans.enums.Status;
@@ -51,6 +54,7 @@ public class Scanner{
 						revistasNaoProcessadas = cliente.getRevistas("Status = ?", status);
 						for (Revista revista : revistasNaoProcessadas) {
 							try{
+								Miniatura miniatura = revista.getMiniatura();
 								revista.setStatus(Status.EM_PROCESSAMENTO);
 								DAORevista.getInstance().persist(revista);
 
@@ -66,11 +70,21 @@ public class Scanner{
 									System.out.println("Gerando página " + (i+1) + " de " + revista.getNPaginas());
 									Image imagem = renderer.render(pdf,i,i).get(0);
 									if(i==0){				
+										revista.setAltura(imagem.getHeight(null));
 										revista.setLargura(imagem.getWidth(null));
-										revista.setAltura(imagem.getHeight(null));							
+										miniatura.setAltura(Parametros.ALTURA_MINIATURA);
+										//Regra de 3 =D
+										miniatura.setLargura((Parametros.ALTURA_MINIATURA*revista.getLargura())/revista.getAltura());
 										DAORevista.getInstance().persist(revista);
 									}
-									gerarImagem(revista, imagem, i + 1);
+									gerarImagem(revista,imagem, i + 1);
+									
+									Image toolkitImage     = imagem.getScaledInstance(miniatura.getLargura(), miniatura.getAltura(), Image.SCALE_AREA_AVERAGING);
+									BufferedImage newImage = new BufferedImage(miniatura.getLargura(), miniatura.getAltura(),BufferedImage.TYPE_INT_RGB);
+									Graphics g = newImage.getGraphics();
+									g.drawImage(toolkitImage, 0, 0, null);
+									g.dispose();
+									gerarImagem(miniatura,newImage, i + 1);
 									Thread.sleep(200);
 								}
 								revista.setStatus(Status.DISPONIVEL);
