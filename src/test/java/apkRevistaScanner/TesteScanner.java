@@ -25,7 +25,7 @@ public class TesteScanner {
 			}
 			Revista revistaTeste;
 			try{
-				String[] paramnsRevista = {"revistaTeste"};			
+				String[] paramnsRevista = {"Dominando o Android"};			
 				revistaTeste = clienteTeste.getRevistas("nomeDaRevista = ?", paramnsRevista).get(0);
 			}catch(RevistaNaoEncontrada e){
 				revistaTeste = new Revista(clienteTeste, "revistaTeste");

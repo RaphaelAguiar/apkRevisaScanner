@@ -56,25 +56,23 @@ public class Scanner{
 
 								File arquivo              = new File(revista.getFolder() + ".pdf");
 								PDFDocument pdf           = new PDFDocument();
+								
 								SimpleRenderer renderer   = new SimpleRenderer();
 								pdf.load(arquivo);
+								renderer.setAntialiasing(SimpleRenderer.OPTION_ANTIALIASING_HIGH);
 								renderer.setResolution(Parametros.RESOLUCAO_PADRAO);
-								List<Image> imagens = renderer.render(pdf);
-								
-								//Este trecho do fonte parte do presuposto que toda revista deve ter pelo menos 1 pasta
-								Image imagem  = imagens.get(0);
-								revista.setLargura(imagem.getWidth(null));
-								revista.setAltura(imagem.getHeight(null));
-								revista.setNPaginas(imagens.size());								
-								revista.setStatus(Status.GERANDO_IMAGENS);
-								DAORevista.getInstance().persist(revista);
-								for (int i = 1; i <= revista.getNPaginas() ; i++) {
-									Pagina pagina = new Pagina(revista,i);
-									imagem        = imagens.get(i-1);
-									ImageIO.write((RenderedImage) imagem,Parametros.FORMATO_PADRAO,new File(pagina.getFolder()));
-									DAOPagina.getInstance().persist(pagina);
+								revista.setNPaginas(pdf.getPageCount());
+								for (int i = 0; i < revista.getNPaginas() ; i++){
+									System.out.println("Gerando página " + (i+1) + " de " + revista.getNPaginas());
+									Image imagem = renderer.render(pdf,i,i).get(0);
+									if(i==0){				
+										revista.setLargura(imagem.getWidth(null));
+										revista.setAltura(imagem.getHeight(null));							
+										DAORevista.getInstance().persist(revista);
+									}
+									gerarImagem(revista, imagem, i + 1);
+									Thread.sleep(200);
 								}
-								
 								revista.setStatus(Status.DISPONIVEL);
 								DAORevista.getInstance().persist(revista);
 							}catch(FileNotFoundException e){
@@ -110,6 +108,13 @@ public class Scanner{
 				parar = true;
 			}
 		}
+		
+	}
+
+	private void gerarImagem(Revista revista, Image imagem, int nPagina) throws IOException {
+		Pagina pagina = new Pagina(revista,nPagina);
+		ImageIO.write((RenderedImage) imagem,Parametros.FORMATO_PADRAO,new File(pagina.getFolder()));
+		DAOPagina.getInstance().persist(pagina);
 	}
 
 	public static Scanner getInstance(){
@@ -121,10 +126,10 @@ public class Scanner{
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner();
 		while(true){
-			System.out.println("Iniciada varredura!");
+			//System.out.println("Iniciada varredura!");
 			scanner.run();
 			try {
-				System.out.println("Varredura completa!");
+				//System.out.println("Varredura completa!");
 				Thread.sleep(Parametros.INTERVALO_ENTRE_VARREDURAS_DO_SCANNER*1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
