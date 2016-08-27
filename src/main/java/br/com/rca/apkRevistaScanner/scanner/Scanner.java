@@ -73,18 +73,12 @@ public class Scanner{
 										revista.setAltura(imagem.getHeight(null));
 										revista.setLargura(imagem.getWidth(null));
 										miniatura.setAltura(Parametros.ALTURA_MINIATURA);
-										//Regra de 3 =D
 										miniatura.setLargura((Parametros.ALTURA_MINIATURA*revista.getLargura())/revista.getAltura());
 										DAORevista.getInstance().persist(revista);
 									}
-									gerarImagem(revista,imagem, i + 1);
-									
-									Image toolkitImage     = imagem.getScaledInstance(miniatura.getLargura(), miniatura.getAltura(), Image.SCALE_AREA_AVERAGING);
-									BufferedImage newImage = new BufferedImage(miniatura.getLargura(), miniatura.getAltura(),BufferedImage.TYPE_INT_RGB);
-									Graphics g = newImage.getGraphics();
-									g.drawImage(toolkitImage, 0, 0, null);
-									g.dispose();
-									gerarImagem(miniatura,newImage, i + 1);
+									int nPagina = i + 1;
+									gerarImagem(revista,      nPagina, imagem);									
+									gerarMiniatura(miniatura, nPagina, imagem);
 									Thread.sleep(200);
 								}
 								revista.setStatus(Status.DISPONIVEL);
@@ -117,15 +111,24 @@ public class Scanner{
 				}								
 			}catch(ClienteNaoEncontrado e){
 				parar = true;
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 				parar = true;
 			}
 		}
 		
 	}
 
-	private void gerarImagem(Revista revista, Image imagem, int nPagina) throws IOException {
+	private void gerarMiniatura(Miniatura miniatura, int nPagina, Image imagem) throws IOException {
+		Image toolkitImage     = imagem.getScaledInstance(miniatura.getLargura(), miniatura.getAltura(), Image.SCALE_AREA_AVERAGING);
+		BufferedImage newImage = new BufferedImage(miniatura.getLargura(), miniatura.getAltura(),BufferedImage.TYPE_INT_RGB);
+		Graphics g             = newImage.getGraphics();
+		g.drawImage(toolkitImage, 0, 0, null);
+		g.dispose();
+		gerarImagem(miniatura,nPagina, newImage);
+	}
+
+	private void gerarImagem(Revista revista, int nPagina, Image imagem) throws IOException {
 		Pagina pagina = new Pagina(revista,nPagina);
 		ImageIO.write((RenderedImage) imagem,Parametros.FORMATO_PADRAO,new File(pagina.getFolder()));
 		DAOPagina.getInstance().persist(pagina);
